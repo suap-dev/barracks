@@ -23,7 +23,7 @@ public class BarracksAPP extends ApplicationAdapter {
 
 		r1 = new Rectangle(10, 10, 200, 100);
 
-		r2 = new MyRectangle(windowWidth / 2, windowHeight / 2, 100, 50);
+		r2 = new MyRectangle(new Vector2(windowWidth / 2, windowHeight / 2), 100, 50);
 		r2.setAngularVelocity(-18);
 	}
 
@@ -52,16 +52,25 @@ class MyRectangle extends Rectangle {
 	private float angularVelocity;
 	private float rotation;
 
-	public MyRectangle(float x, float y, float width, float height, float rotation) {
-		this(x, y, width, height);
+	public MyRectangle(Vector2 origin, float width, float height, float rotation) {
+		super(-width/2, -height/2, width, height);
+		this.translationMatrix = origin;
 		this.rotation = rotation;
 	}
 
+	public MyRectangle(Vector2 origin, float width, float height) {		
+		this(origin, width, height, 0);
+	}
+
+	public MyRectangle(float x, float y, float width, float height, float rotation) {
+		super(0, 0, width, height);
+		this.translationMatrix = new Vector2(x, y);
+		this.rotation = rotation;
+		this.angularVelocity = 0;
+	}
+
 	public MyRectangle(float x, float y, float width, float height) {
-		super(-width / 2, -height / 2, width, height);
-		translationMatrix = new Vector2(x, y);
-		angularVelocity = 0;
-		rotation = 0;
+		this(x, y, width, height, 0);
 	}
 
 	public void draw(ShapeRenderer sRenderer) {
