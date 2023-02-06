@@ -2,6 +2,7 @@ package dev.suap.barracks;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -26,6 +27,7 @@ public class BarracksAPP extends ApplicationAdapter {
 		r1 = new Rectangle(10, 10, 200, 100);
 
 		r2 = new MyRectangle(new Vector2(windowWidth / 2, windowHeight / 2), 100, 50);
+		r2.setColor(Color.CHARTREUSE);
 		r2.setAngularVelocity(-18);
 	}
 
