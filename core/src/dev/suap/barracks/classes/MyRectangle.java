@@ -3,6 +3,7 @@ package dev.suap.barracks.classes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import dev.suap.barracks.interfaces.Entity;
@@ -12,15 +13,16 @@ public class MyRectangle extends Rectangle implements Entity, Rotatable {
 	private Vector2 translationMatrix;
 	private float angularVelocity;
 	private float rotation;
-	private Color color = Color.WHITE;
 
-	public Color getColor() {
-		return color;
-	}
+	// for interpolation
+	private boolean isInterpolated = false;
+	private float startingRotation;
+	private float targetRotation;
+	private float timeInSeconds;
+	private float progress = 0;
+	private Interpolation method;
 
-	public void setColor(Color color) {
-		this.color = color;
-	}
+	private Color color = Color.WHITE;	
 
 	public MyRectangle(Vector2 origin, float width, float height, float rotation) {
 		super(-width / 2, -height / 2, width, height);
@@ -43,6 +45,23 @@ public class MyRectangle extends Rectangle implements Entity, Rotatable {
 		this(x, y, width, height, 0);
 	}
 
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	public void addInterpolatedRotation(float targetRotation, float time, Interpolation method){
+		isInterpolated = true;
+		this.startingRotation = this.rotation;
+		this.targetRotation = targetRotation;
+		this.timeInSeconds = time;
+		this.progress = 0;
+		this.method = method;
+	}
+
 	@Override
 	public void draw(ShapeRenderer shapeRenderer) {
 		shapeRenderer.translate(translationMatrix.x, translationMatrix.y, 0);
@@ -53,8 +72,13 @@ public class MyRectangle extends Rectangle implements Entity, Rotatable {
 	}
 
 	@Override
-	public void update(float deltaTime) {
-		rotation += angularVelocity * deltaTime;
+	public void update(float deltaTime) {		
+		if(isInterpolated && progress < 1.0f) {			
+			rotation = method.apply(startingRotation, targetRotation, progress);
+			progress += deltaTime/this.timeInSeconds;
+			Gdx.app.log("SD", ""+progress);
+		}
+		// rotation += angularVelocity * deltaTime;
 	}
 
 	/**
