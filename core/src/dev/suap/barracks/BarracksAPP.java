@@ -33,7 +33,6 @@ public class BarracksAPP extends ApplicationAdapter {
 		batch.draw(img, -viewport.getWorldWidth() / 2 + 1, -viewport.getWorldHeight() / 2 + 1, img.getWidth() / METER,
 				img.getHeight() / METER);
 		batch.end();
-
 	}
 
 	@Override
@@ -42,5 +41,6 @@ public class BarracksAPP extends ApplicationAdapter {
 
 	@Override
 	public void resize(int width, int height) {
+		viewport.update(width, height);
 	}
 }
