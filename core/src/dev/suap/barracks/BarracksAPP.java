@@ -68,6 +68,7 @@ public class BarracksAPP extends ApplicationAdapter {
 					Gdx.app.log(TAG, "" + viewport.getCamera().position.toString());
 					break;
 				case Input.Keys.DOWN:
+					viewport.getCamera().position.y -= 1;
 					Gdx.app.log(TAG, "" + viewport.getCamera().position.toString());
 					break;
 				case Input.Keys.LEFT:
