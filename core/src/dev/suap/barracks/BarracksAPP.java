@@ -20,61 +20,50 @@ public class BarracksAPP extends ApplicationAdapter {
 	World world;
 	Box2DDebugRenderer debugRenderer;
 	ShapeRenderer shapeRenderer;
-	Array<SBody> sBodies = new Array<>();
+	SBox2DWorldRenderer sRenderer;
 
 	private static final float METER = 128;
 
 	@Override
 	public void create() {
 		Gdx.input.setInputProcessor(new InputHandler());
-		final String TAG = "BarracksAPP.create()";
+		final String DEBUG_TAG = "BarracksAPP.create()"; // for debugging
 
 		viewport = new ScreenViewport();
 		viewport.setUnitsPerPixel(1 / METER);
 		viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-		shapeRenderer = new ShapeRenderer();
-		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
+		// shapeRenderer.setProjectionMatrix(viewport.getCamera().combined); /* we're
+		// doing this in SBox2DWorldRenderer now */
 
-		Gdx.app.log(TAG, "viewport.getWorldHeight(): " + viewport.getWorldHeight());
-		Gdx.app.log(TAG, "viewport.getScreenHeight(): " + viewport.getScreenHeight());
+		sRenderer = new SBox2DWorldRenderer();
 
 		world = new World(new Vector2(0, -10), true);
 
-		debugRenderer = new Box2DDebugRenderer(
-				true,
-				true,
-				false,
-				true,
-				false,
-				false);
-		sBodies.add(
-				new SBody(world, new Vector2(0, 1), BodyType.DynamicBody)
-						.attachCircle(0.2f));
-		sBodies.add(new SBody(world, new Vector2(-0.1f, -1f), BodyType.DynamicBody)
-				.attachCircle(0.2f));
-		sBodies.add(new SBody(world, new Vector2(0, -viewport.getWorldHeight() / 2), BodyType.StaticBody)
+		// debugRenderer = new Box2DDebugRenderer(
+		// 		true,
+		// 		true,
+		// 		false,
+		// 		true,
+		// 		false,
+		// 		false);
+		
+		new SBody(world, new Vector2(0, 1), BodyType.DynamicBody)
+				.attachCircle(0.2f);
+		new SBody(world, new Vector2(-0.1f, -1f), BodyType.DynamicBody)
+				.attachCircle(0.2f);
+		new SBody(world, new Vector2(0, -viewport.getWorldHeight() / 2), BodyType.StaticBody)
 				.attachBox(viewport.getWorldWidth() - 1, 1)
 				.attachBox(new Vector2(-viewport.getWorldWidth() / 2 + 1, 1), 1, 1)
-				.attachBox(new Vector2(viewport.getWorldWidth() / 2 - 1, 1), 1, 1));
-
-		for (SBody sBody : sBodies) {
-			sBody.setRenderer(shapeRenderer);
-		}
+				.attachBox(new Vector2(viewport.getWorldWidth() / 2 - 1, 1), 1, 1);
 	}
 
 	@Override
 	public void render() {
 		world.step(1 / 60f, 1, 1);
-
 		ScreenUtils.clear(Color.DARK_GRAY);
-		viewport.getCamera().update();
-		// debugRenderer.render(world, viewport.getCamera().combined); // for box2d debugging purposes
-		shapeRenderer.begin(ShapeType.Line);
-		for (SBody sBody : sBodies) {
-			sBody.draw();
-		}
-		shapeRenderer.end();
+		// viewport.getCamera().update(); // required if we manipulate the camera
+		sRenderer.render(world, viewport.getCamera().combined);
 	}
 
 	@Override
