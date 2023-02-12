@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import dev.suap.barracks.physics.SBody;
+import dev.suap.barracks.physics.SBox2DWorldRenderer;
 
 public class BarracksAPP extends ApplicationAdapter {
 	ScreenViewport viewport;
@@ -47,7 +48,7 @@ public class BarracksAPP extends ApplicationAdapter {
 		// 		true,
 		// 		false,
 		// 		false);
-		
+
 		new SBody(world, new Vector2(0, 1), BodyType.DynamicBody)
 				.attachCircle(0.2f);
 		new SBody(world, new Vector2(-0.1f, -1f), BodyType.DynamicBody)
