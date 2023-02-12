@@ -6,17 +6,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import dev.suap.barracks.physics.SBody;
 
 public class BarracksAPP extends ApplicationAdapter {
 	ScreenViewport viewport;
@@ -37,69 +33,37 @@ public class BarracksAPP extends ApplicationAdapter {
 		Gdx.app.log(TAG, "viewport.getWorldHeight(): " + viewport.getWorldHeight());
 		Gdx.app.log(TAG, "viewport.getScreenHeight(): " + viewport.getScreenHeight());
 
-
 		world = new World(new Vector2(0, -10), true);
 
 		debugRenderer = new Box2DDebugRenderer(
-			true,
-			true,
-			true,
-			true,
-			true,
-			true
-		);
+				true,
+				true,
+				false,
+				true,
+				false,
+				false);
 
-		Body ball = body(0, 0, BodyType.DynamicBody);
-		attachShapeToBody(circleShape(0, 0, 0.2f), ball);
+		new SBody(world, new Vector2(0, 1), BodyType.DynamicBody)
+				.attachCircle(0.2f);
 
-		Body ground = body(0, -viewport.getWorldHeight()/2, BodyType.StaticBody);
-		attachShapeToBody(boxShape(0, 0, viewport.getWorldWidth()-1, 1), ground);
+		new SBody(world, new Vector2(-0.1f, -1f), BodyType.DynamicBody)
+				.attachCircle(0.2f);
 
+		new SBody(world, new Vector2(0, -viewport.getWorldHeight() / 2), BodyType.StaticBody)
+				.attachBox(viewport.getWorldWidth() - 1, 1)
+				.attachBox(new Vector2(-viewport.getWorldWidth() / 2 + 1, 1), 1, 1)
+				.attachBox(new Vector2(viewport.getWorldWidth() / 2 - 1, 1), 1, 1);
 
 	}
 
 	@Override
 	public void render() {
-		world.step(1f/60f, 1, 1);
+		world.step(1 / 60f, 1, 1);
+
+		viewport.getCamera().update();
 
 		ScreenUtils.clear(Color.DARK_GRAY);
-
 		debugRenderer.render(world, viewport.getCamera().combined);
-	}
-
-	Body body(float x, float y, BodyType bodyType) {
-		// create a body
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = bodyType;
-		bodyDef.position.set(x, y);
-		return world.createBody(bodyDef);
-	}
-
-	// WARNING: This method disposes of the given shape after using it
-		void attachShapeToBody(Shape shape, Body body) {
-		// create a fixtureDef with a given shape
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = shape;
-
-		body.createFixture(fixtureDef);
-		shape.dispose();
-	}
-
-	// WARNING: U need to dispose of the shape after you finish using it!
-	CircleShape circleShape(float x, float y, float radius) {
-		// create a circle
-		CircleShape circle = new CircleShape();
-		circle.setPosition(new Vector2(x, y));
-		circle.setRadius(radius);
-
-		return circle;
-	}
-
-	PolygonShape boxShape(float x, float y, float width, float height) {
-		PolygonShape box = new PolygonShape();
-		box.setAsBox(width/2, height/2, new Vector2(x, y), 0f);
-
-		return box;
 	}
 
 	@Override
@@ -134,7 +98,7 @@ public class BarracksAPP extends ApplicationAdapter {
 				default:
 					break;
 			}
-			Gdx.app.log(TAG, "camera coordinates: " + viewport.getCamera().position.toString());
+			Gdx.app.log(TAG, "camera coordinates: " + viewport.getCamera().position);
 
 			return false;
 		}
