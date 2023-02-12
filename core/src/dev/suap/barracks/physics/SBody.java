@@ -1,24 +1,17 @@
 package dev.suap.barracks.physics;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class SBody {
     private final Body body;
-
-    private ShapeRenderer shapeRenderer;
-    private Vector2 tempVec2;
-    private float[] vertices;
 
     public SBody(World world, Vector2 position, BodyType bodyType) {
         // create a body
@@ -93,43 +86,4 @@ public class SBody {
 
         body.createFixture(fixtureDef);
     }
-
-    public void setRenderer(ShapeRenderer shapeRenderer) {
-        this.shapeRenderer = shapeRenderer;
-    }
-
-    public void draw() {
-        for (Fixture fix : body.getFixtureList()) {
-            draw(fix.getType(), fix.getShape(), body.getPosition());
-        }
-    }
-
-    private void draw(Type shapeType, Shape shape, Vector2 bodyPosition) {
-        shapeRenderer.translate(bodyPosition.x, bodyPosition.y, 0);
-        switch (shapeType) {
-            case Circle:
-                tempVec2 = ((CircleShape) shape).getPosition();
-                shapeRenderer.circle(tempVec2.x, tempVec2.y, shape.getRadius(), 20);
-                break;
-            case Polygon:
-                int vertexCount = ((PolygonShape) shape).getVertexCount();
-                vertices = new float[vertexCount*2];
-                for (int i = 0; i < vertexCount; i++) {
-                    tempVec2 = new Vector2();
-                    ((PolygonShape) shape).getVertex(i, tempVec2);
-                    vertices[2*i] = tempVec2.x;
-                    vertices[2*i+1] = tempVec2.y;
-                }
-                shapeRenderer.polygon(vertices);
-                break;
-            case Edge:
-                break;
-            case Chain:
-                break;
-            default:
-                break;
-        }
-        shapeRenderer.identity();
-    }
-
 }

@@ -4,16 +4,15 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import dev.suap.barracks.physics.SBody;
+import dev.suap.barracks.physics.SBox2DWorldRenderer;
 
 public class BarracksAPP extends ApplicationAdapter {
 	ScreenViewport viewport;
@@ -47,7 +46,7 @@ public class BarracksAPP extends ApplicationAdapter {
 		// 		true,
 		// 		false,
 		// 		false);
-		
+
 		new SBody(world, new Vector2(0, 1), BodyType.DynamicBody)
 				.attachCircle(0.2f);
 		new SBody(world, new Vector2(-0.1f, -1f), BodyType.DynamicBody)
