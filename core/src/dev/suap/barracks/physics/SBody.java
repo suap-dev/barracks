@@ -1,5 +1,6 @@
 package dev.suap.barracks.physics;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -18,6 +19,7 @@ public class SBody {
     private final Body body;
     private ShapeRenderer shapeRenderer;
     private Vector2 tempVec2;
+    private float[] vertices;
 
     public SBody(World world, Vector2 position, BodyType bodyType) {
         // create a body
@@ -101,23 +103,25 @@ public class SBody {
         for (Fixture fix : body.getFixtureList()) {
             draw(fix.getType(), fix.getShape(), body.getPosition());
         }
-
-        // shapeRenderer.translate(translationMatrix.x, translationMatrix.y, 0);
-        // shapeRenderer.rotate(0, 0, 1, rotation);
-        // shapeRenderer.setColor(color);
-        // shapeRenderer.rect(x, y, width, height);
-        // shapeRenderer.identity();
     }
 
     private void draw(Type shapeType, Shape shape, Vector2 bodyPosition) {
-        // shapeRenderer.translate(bodyPosition.x, bodyPosition.y, 0);
+        shapeRenderer.translate(bodyPosition.x, bodyPosition.y, 0);
         switch (shapeType) {
             case Circle:
                 tempVec2 = ((CircleShape) shape).getPosition();
-                // shapeRenderer.circle(tempVec2.x, tempVec2.y, shape.getRadius());
-                shapeRenderer.circle(0,0,shape.getRadius());
+                shapeRenderer.circle(tempVec2.x, tempVec2.y, shape.getRadius(), 20);
                 break;
             case Polygon:
+                int vertexCount = ((PolygonShape) shape).getVertexCount();
+                vertices = new float[vertexCount*2];
+                for (int i = 0; i < vertexCount; i++) {
+                    tempVec2 = new Vector2();
+                    ((PolygonShape) shape).getVertex(i, tempVec2);
+                    vertices[2*i] = tempVec2.x;
+                    vertices[2*i+1] = tempVec2.y;
+                }
+                shapeRenderer.polygon(vertices);
                 break;
             case Edge:
                 break;
@@ -126,7 +130,7 @@ public class SBody {
             default:
                 break;
         }
-        // shapeRenderer.identity();
+        shapeRenderer.identity();
         // enum Type {
         // Circle, Edge, Polygon, Chain,
         // };

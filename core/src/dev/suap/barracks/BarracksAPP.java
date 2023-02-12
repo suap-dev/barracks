@@ -21,8 +21,8 @@ public class BarracksAPP extends ApplicationAdapter {
 	ScreenViewport viewport;
 	World world;
 	Box2DDebugRenderer debugRenderer;
-	Array<SBody> sBodies = new Array<>();
 	ShapeRenderer shapeRenderer;
+	Array<SBody> sBodies = new Array<>();
 
 	private static final float METER = 128;
 
@@ -36,6 +36,7 @@ public class BarracksAPP extends ApplicationAdapter {
 		viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		shapeRenderer = new ShapeRenderer();
+		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);		
 
 		Gdx.app.log(TAG, "viewport.getWorldHeight(): " + viewport.getWorldHeight());
 		Gdx.app.log(TAG, "viewport.getScreenHeight(): " + viewport.getScreenHeight());
@@ -72,11 +73,10 @@ public class BarracksAPP extends ApplicationAdapter {
 		ScreenUtils.clear(Color.DARK_GRAY);
 		viewport.getCamera().update();
 		// debugRenderer.render(world, viewport.getCamera().combined);
-		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.begin(ShapeType.Line);
 		for (SBody sBody: sBodies) {
 			sBody.draw();
 		}
-		shapeRenderer.circle(1, 0, 0);
 		shapeRenderer.end();
 	}
 
