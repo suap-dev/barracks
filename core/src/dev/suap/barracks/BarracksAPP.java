@@ -2,8 +2,6 @@ package dev.suap.barracks;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -71,7 +69,7 @@ public class BarracksAPP extends ApplicationAdapter {
 
 		ScreenUtils.clear(Color.DARK_GRAY);
 		viewport.getCamera().update();
-		// debugRenderer.render(world, viewport.getCamera().combined);
+		// debugRenderer.render(world, viewport.getCamera().combined); // for box2d debugging purposes
 		shapeRenderer.begin(ShapeType.Line);
 		for (SBody sBody : sBodies) {
 			sBody.draw();
@@ -86,76 +84,5 @@ public class BarracksAPP extends ApplicationAdapter {
 	@Override
 	public void resize(int width, int height) {
 		viewport.update(width, height);
-	}
-
-	private class InputHandler implements InputProcessor {
-		private static final String TAG = "InputHandler";
-
-		@Override
-		public boolean keyDown(int keycode) {
-			switch (keycode) {
-				case Input.Keys.UP:
-					viewport.getCamera().position.y += 1;
-					break;
-				case Input.Keys.DOWN:
-					viewport.getCamera().position.y -= 1;
-					break;
-				case Input.Keys.LEFT:
-					viewport.getCamera().position.x -= 1;
-					break;
-				case Input.Keys.RIGHT:
-					viewport.getCamera().position.x += 1;
-					break;
-				case Input.Keys.SPACE:
-					break;
-				default:
-					break;
-			}
-			Gdx.app.log(TAG, "camera coordinates: " + viewport.getCamera().position);
-
-			return false;
-		}
-
-		@Override
-		public boolean keyUp(int keycode) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean keyTyped(char character) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean touchDragged(int screenX, int screenY, int pointer) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean mouseMoved(int screenX, int screenY) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean scrolled(float amountX, float amountY) {
-			// TODO Auto-generated method stub
-			return false;
-		}
 	}
 }
