@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -40,12 +41,12 @@ public class BarracksAPP extends ApplicationAdapter {
 		world = new World(new Vector2(0, -10), true);
 
 		// debugRenderer = new Box2DDebugRenderer(
-		// 		true,
-		// 		true,
-		// 		false,
-		// 		true,
-		// 		false,
-		// 		false);
+		// true,
+		// true,
+		// false,
+		// true,
+		// false,
+		// false);
 
 		new SBody(world, new Vector2(0, 1), BodyType.DynamicBody)
 				.attachCircle(0.2f);
@@ -62,7 +63,7 @@ public class BarracksAPP extends ApplicationAdapter {
 		world.step(1 / 60f, 1, 1);
 		ScreenUtils.clear(Color.DARK_GRAY);
 		// viewport.getCamera().update(); // required if we manipulate the camera
-		sRenderer.render(world, viewport.getCamera().combined);
+		sRenderer.render(world, viewport.getCamera().combined, ShapeType.Filled);
 	}
 
 	@Override

@@ -14,14 +14,15 @@ import com.badlogic.gdx.utils.Array;
 
 public class SBox2DWorldRenderer extends ShapeRenderer {
     private final Vector2 tempVec2 = Vector2.Zero;
-    private final float[] vertices = new float[40];
+    private final float[] vertices = new float[60];
+    private final float[] triangle = new float[6];
     private final Array<Body> bodies = new Array<>();
 
-    public void render(World world, Matrix4 projectionMatrix) {
+    public void render(World world, Matrix4 projectionMatrix, ShapeType shapeType) {
         world.getBodies(bodies);
 
         super.setProjectionMatrix(projectionMatrix);
-        super.begin(ShapeType.Line);
+        super.begin(shapeType);
 
         for (Body body : bodies) {
             for (Fixture fix : body.getFixtureList()) {
@@ -47,7 +48,9 @@ public class SBox2DWorldRenderer extends ShapeRenderer {
                     vertices[2 * i] = tempVec2.x;
                     vertices[2 * i + 1] = tempVec2.y;
                 }
-                super.polygon(vertices, 0, vertexCount * 2);
+                for (int i = 1; i < vertexCount - 1; i++) {
+                    triangle(i * 2);
+                }
                 break;
             case Edge:
                 break;
@@ -57,5 +60,15 @@ public class SBox2DWorldRenderer extends ShapeRenderer {
                 break;
         }
         super.identity();
+    }
+
+    private void triangle(int secondVertexIndex) {
+        super.triangle(
+                vertices[0],
+                vertices[1],
+                vertices[secondVertexIndex],
+                vertices[secondVertexIndex + 1],
+                vertices[secondVertexIndex + 2],
+                vertices[secondVertexIndex + 3]);
     }
 }
