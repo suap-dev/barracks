@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.Array;
 
 public class SBox2DWorldRenderer extends ShapeRenderer {
     private final Vector2 tempVec2 = Vector2.Zero;
-    private final float[] vertices = new float[60];
     private final float[] triangle = new float[6];
     private final Array<Body> bodies = new Array<>();
 
@@ -36,20 +35,36 @@ public class SBox2DWorldRenderer extends ShapeRenderer {
         super.translate(bodyPosition.x, bodyPosition.y, 0);
         switch (shapeType) {
             case Circle:
-                tempVec2.set(
-                        ((CircleShape) shape).getPosition().x,
-                        ((CircleShape) shape).getPosition().y);
-                super.circle(tempVec2.x, tempVec2.y, shape.getRadius(), 20);
+                super.circle(((CircleShape) shape).getPosition().x, ((CircleShape) shape).getPosition().y,
+                        shape.getRadius(), 20);
                 break;
             case Polygon:
                 int vertexCount = ((PolygonShape) shape).getVertexCount();
-                for (int i = 0; i < vertexCount; i++) {
-                    ((PolygonShape) shape).getVertex(i, tempVec2);
-                    vertices[2 * i] = tempVec2.x;
-                    vertices[2 * i + 1] = tempVec2.y;
-                }
-                for (int i = 1; i < vertexCount - 1; i++) {
-                    triangle(i * 2);
+
+                // we're drawing the polygon using triangles.
+
+                // zero=th vertex - used to draw every triangle
+                ((PolygonShape) shape).getVertex(0, tempVec2);
+                triangle[0] = tempVec2.x;
+                triangle[1] = tempVec2.y;
+
+                // we iterate over all triangles required to draw the polygon.
+                // we start with 1-th vertex and go one by one
+                // untill we're at the one before last vertex
+                for (int n = 1; n < vertexCount - 1; n++) {
+                    // n-th vertex becomes the 1-st vertex of current triangle
+                    ((PolygonShape) shape).getVertex(n, tempVec2);
+                    triangle[2] = tempVec2.x;
+                    triangle[3] = tempVec2.y;
+
+                    // n+1-th vertex becomes the 2-nd vertex of current triangle
+                    ((PolygonShape) shape).getVertex(n + 1, tempVec2);
+                    triangle[4] = tempVec2.x;
+                    triangle[5] = tempVec2.y;
+
+                    super.triangle(triangle[0], triangle[1], // 0-th vertex
+                            triangle[2], triangle[3], // 1-th vertex
+                            triangle[4], triangle[5]); // 2-nd vertex
                 }
                 break;
             case Edge:
@@ -60,15 +75,5 @@ public class SBox2DWorldRenderer extends ShapeRenderer {
                 break;
         }
         super.identity();
-    }
-
-    private void triangle(int secondVertexIndex) {
-        super.triangle(
-                vertices[0],
-                vertices[1],
-                vertices[secondVertexIndex],
-                vertices[secondVertexIndex + 1],
-                vertices[secondVertexIndex + 2],
-                vertices[secondVertexIndex + 3]);
     }
 }
