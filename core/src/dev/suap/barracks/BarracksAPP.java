@@ -36,7 +36,7 @@ public class BarracksAPP extends ApplicationAdapter {
 		viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		shapeRenderer = new ShapeRenderer();
-		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);		
+		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 
 		Gdx.app.log(TAG, "viewport.getWorldHeight(): " + viewport.getWorldHeight());
 		Gdx.app.log(TAG, "viewport.getScreenHeight(): " + viewport.getScreenHeight());
@@ -59,22 +59,21 @@ public class BarracksAPP extends ApplicationAdapter {
 				.attachBox(viewport.getWorldWidth() - 1, 1)
 				.attachBox(new Vector2(-viewport.getWorldWidth() / 2 + 1, 1), 1, 1)
 				.attachBox(new Vector2(viewport.getWorldWidth() / 2 - 1, 1), 1, 1));
-		
-				for(SBody sBody: sBodies) {
-					sBody.setRenderer(shapeRenderer);
-				}
+
+		for (SBody sBody : sBodies) {
+			sBody.setRenderer(shapeRenderer);
+		}
 	}
 
 	@Override
 	public void render() {
 		world.step(1 / 60f, 1, 1);
-		
 
 		ScreenUtils.clear(Color.DARK_GRAY);
 		viewport.getCamera().update();
 		// debugRenderer.render(world, viewport.getCamera().combined);
 		shapeRenderer.begin(ShapeType.Line);
-		for (SBody sBody: sBodies) {
+		for (SBody sBody : sBodies) {
 			sBody.draw();
 		}
 		shapeRenderer.end();
