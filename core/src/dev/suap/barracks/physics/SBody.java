@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class SBody {
-    public Body body;
+    private final Body body;
 
     public SBody(World world, Vector2 position, BodyType bodyType) {
         // create a body
@@ -21,6 +21,10 @@ public class SBody {
         bodyDef.position.y = position.y;
 
         body = world.createBody(bodyDef);
+    }
+
+    public Body getBody() {
+        return body;
     }
 
     public SBody attachBox(float width, float height) {
