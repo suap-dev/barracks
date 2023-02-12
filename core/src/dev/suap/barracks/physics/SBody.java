@@ -1,17 +1,23 @@
 package dev.suap.barracks.physics;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class SBody {
     private final Body body;
+    private ShapeRenderer shapeRenderer;
+    private Vector2 tempVec2;
 
     public SBody(World world, Vector2 position, BodyType bodyType) {
         // create a body
@@ -86,4 +92,45 @@ public class SBody {
 
         body.createFixture(fixtureDef);
     }
+
+    public void setRenderer(ShapeRenderer shapeRenderer) {
+        this.shapeRenderer = shapeRenderer;
+    }
+
+    public void draw() {
+        for (Fixture fix : body.getFixtureList()) {
+            draw(fix.getType(), fix.getShape(), body.getPosition());
+        }
+
+        // shapeRenderer.translate(translationMatrix.x, translationMatrix.y, 0);
+        // shapeRenderer.rotate(0, 0, 1, rotation);
+        // shapeRenderer.setColor(color);
+        // shapeRenderer.rect(x, y, width, height);
+        // shapeRenderer.identity();
+    }
+
+    private void draw(Type shapeType, Shape shape, Vector2 bodyPosition) {
+        // shapeRenderer.translate(bodyPosition.x, bodyPosition.y, 0);
+        switch (shapeType) {
+            case Circle:
+                tempVec2 = ((CircleShape) shape).getPosition();
+                // shapeRenderer.circle(tempVec2.x, tempVec2.y, shape.getRadius());
+                shapeRenderer.circle(0,0,shape.getRadius());
+                break;
+            case Polygon:
+                break;
+            case Edge:
+                break;
+            case Chain:
+                break;
+            default:
+                break;
+        }
+        // shapeRenderer.identity();
+        // enum Type {
+        // Circle, Edge, Polygon, Chain,
+        // };
+
+    }
+
 }
